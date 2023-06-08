@@ -3,7 +3,7 @@
       path="/org/gnome/shell/extensions/date-menu-formatter/">
 
     <key type="s" name="pattern">
-        <default>"EEE, MMM d  H : mm"</default>
+        <default>"EEE, dd MMM YYYY - HH:mm:ss"</default>
         <summary>Date format pattern</summary>
         <description></description>
     </key>
@@ -28,7 +28,7 @@
         <description></description>
     </key>        
     <key type="i" name="font-size">
-        <default>10</default>
+        <default>11</default>
         <summary>Font size</summary>
         <description></description>
     </key>    
