@@ -20,6 +20,7 @@ const { Clutter, St } = imports.gi;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 const { SimpleDateFormat } = Me.imports.lib.SimpleDateFormat;
+const { ProcessEnvFormat } = Me.imports.lib.ProcessEnvFormat;
 const Utils = Me.imports.utils;
 const Mainloop = imports.mainloop;
 const Main = imports.ui.main;
@@ -36,6 +37,17 @@ let FONT_SIZE = 1;
 
 function _getDateMenuButton(panel) {
     return panel.statusArea.dateMenu.get_children()[0];
+}
+
+class FormatChain {
+    constructor(...formatters) {
+        this.formatters = formatters;
+    }
+
+    format(input, date) {
+        return this.formatters
+            .reduce((o, f) => f.format(o, date), input);
+    }
 }
 
 class Extension {
@@ -72,7 +84,10 @@ class Extension {
         APPLY_ALL_PANELS = this._settings.get_boolean(Utils.PrefFields.APPLY_ALL_PANELS);
         FONT_SIZE = this._settings.get_int(Utils.PrefFields.FONT_SIZE);
         const locale = USE_DEFAULT_LOCALE ? Utils.getCurrentLocale() : CUSTOM_LOCALE
-        this._formatter = new SimpleDateFormat(locale)
+        this._formatter = new FormatChain(
+            new ProcessEnvFormat(),
+            new SimpleDateFormat(locale)
+        )
     }
 
     _removeIndicator(panels) {
